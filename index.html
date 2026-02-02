@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GamerRP | Support Portal</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/x-icon" href="logo.webp">
+</head>
+<body>
+
+    <div id="toast-container"></div>
+
+    <nav id="navbar" class="hidden">
+        <div class="logo">GamerRP Support</div>
+        <div class="menu-toggle" onclick="window.app.toggleMenu()">
+            <i class="fas fa-bars"></i>
+        </div>
+        <div class="nav-links" id="nav-links">
+            <button onclick="window.app.showTab('home')">Home</button>
+            <button onclick="window.app.showTab('global-chat')">Global Chat</button>
+            <button onclick="window.app.showTab('my-complaints')">My Complaints</button>
+            <button onclick="window.app.showTab('contact')">Contact</button>
+            <button id="nav-admin" class="hidden" onclick="window.app.showTab('admin-area')">Admin Area</button>
+            <button id="nav-owner" class="hidden" onclick="window.app.showTab('owner-panel')">Owner Panel</button>
+            <button onclick="window.app.logout()" class="logout-btn">Logout</button>
+        </div>
+    </nav>
+
+    <div id="auth-section">
+        <div class="auth-container">
+            <h2>Welcome</h2>
+            <div class="tabs">
+                <button id="tab-login" class="active">Login</button>
+                <button id="tab-register">Register</button>
+            </div>
+
+            <form id="login-form">
+                <input type="email" id="login-email" placeholder="Email" required>
+                <input type="password" id="login-pass" placeholder="Password" required>
+                <label class="checkbox-container">
+                    <input type="checkbox" id="stay-logged-in"> Stay Logged In
+                </label>
+                <button type="submit">Login</button>
+            </form>
+
+            <form id="register-form" class="hidden">
+                <input type="text" id="reg-username" placeholder="Username (Unique)" required>
+                <input type="email" id="reg-email" placeholder="Email" required>
+                <input type="password" id="reg-pass" placeholder="Password" required>
+                <button type="submit">Register</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="app-content" class="hidden">
+
+        <section id="home" class="tab-content">
+            <div class="hero">
+                <h1>The Ultimate Gaming Experience</h1>
+                <p>Welcome to our world! If you encounter issues or rule-breakers, we are here to help.</p>
+                <button class="cta-btn" onclick="window.app.toggleComplaintForm()">Create Complaint</button>
+            </div>
+
+            <div id="create-complaint-wrapper" class="hidden">
+                <div class="form-box">
+                    <h3>Submit a Ticket</h3>
+                    <form id="complaint-form">
+                        <input type="text" id="comp-ign" placeholder="Your In-Game Nickname" required>
+                        <input type="text" id="comp-against" placeholder="Complaint Against (User Name)" required>
+                        <textarea id="comp-desc" placeholder="Description: What happened?" rows="4" required></textarea>
+                        <input type="text" id="comp-proof" placeholder="Link to Proof (Screenshot/Video URL)" required>
+                        <button type="submit">Submit Complaint</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <section id="global-chat" class="tab-content hidden">
+            <h2>Global Community Chat</h2>
+            <div class="chat-container">
+                <div id="chat-messages" class="chat-messages"></div>
+                <form id="chat-form" class="chat-input-area">
+                    <input type="text" id="chat-input" placeholder="Type a message..." autocomplete="off">
+                    <button type="submit"><i class="fas fa-paper-plane"></i></button>
+                </form>
+            </div>
+        </section>
+
+        <section id="my-complaints" class="tab-content hidden">
+            <h2>My History</h2>
+            <div id="my-complaints-list" class="list-container"></div>
+        </section>
+
+        <section id="contact" class="tab-content hidden">
+            <h2>Contact Us</h2>
+            <p>Stay Connected! Join our Discord community or send us an email for support.</p>
+            <div class="contact-buttons">
+                <a href="https://discord.gg/tX8AR9upfs" target="_blank" class="btn-contact discord">
+                    <i class="fab fa-discord"></i> Join Discord
+                </a>
+                <a href="https://mail.google.com/mail/?view=cm&fs=1&to=gamerzroleplay@gmail.com" target="_blank" class="btn-contact email">
+                    <i class="fas fa-envelope"></i> Send Email
+                </a>
+            </div>
+        </section>
+
+        <section id="admin-area" class="tab-content hidden">
+            <h2>Admin Dashboard</h2>
+            <div class="admin-controls">
+                <button onclick="window.app.filterAdmin('pending')">Has to Respond Yet</button>
+                <button onclick="window.app.filterAdmin('resolved')">Has Responded</button>
+            </div>
+            <div id="admin-complaints-list" class="list-container"></div>
+        </section>
+
+        <section id="owner-panel" class="tab-content hidden">
+            <h2>Owner Control Panel</h2>
+
+            <div class="owner-section">
+                <h3>Grant Admin Powers</h3>
+                <form id="make-admin-form">
+                    <input type="text" id="admin-target" placeholder="Enter Username or Email" required>
+                    <button type="submit">Make Admin</button>
+                </form>
+            </div>
+            
+            <div class="owner-section">
+                <h3>Revoke Powers</h3>
+                <input type="text" id="revoke-target" placeholder="Enter Username to Revoke">
+                <button type="button" class="btn-remove" onclick="window.app.removeAdminAccess()">
+                    Confirm Remove Admin Access
+                </button>
+            </div>
+
+            <div class="owner-section">
+                <h3>Admin Statistics</h3>
+                <div class="stats-controls">
+                    <button onclick="window.app.resetAdminStats()" class="danger-btn">Reset All Stats</button>
+                </div>
+                <table id="admin-stats-table">
+                    <thead>
+                        <tr>
+                            <th>Admin Name</th>
+                            <th>Complaints Handled</th>
+                            <th>Period</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+
+            <div class="owner-section">
+                <h3>System Admins List</h3>
+                <ul id="admin-users-list"></ul>
+            </div>
+        </section>
+
+    </div>
+
+    <div id="chat-context-menu" class="context-menu hidden">
+        <div class="menu-header">Manage Message</div>
+        <button onclick="window.app.handleMenuAction('delete')"><i class="fas fa-trash"></i> Delete Message</button>
+        <button onclick="window.app.handleMenuAction('mute')"><i class="fas fa-microphone-slash"></i> Mute User</button>
+        <button onclick="window.app.openTimeoutModal()"><i class="fas fa-clock"></i> Timeout User</button>
+    </div>
+
+    <div id="timeout-modal" class="modal-overlay hidden">
+        <div class="modal-box">
+            <h3>Select Timeout Duration</h3>
+            <div class="timeout-options">
+                <button onclick="window.app.handleMenuAction('timeout', 10)">10 Minutes</button>
+                <button onclick="window.app.handleMenuAction('timeout', 60)">1 Hour</button>
+                <button onclick="window.app.handleMenuAction('timeout', 1440)">24 Hours</button>
+                <button onclick="window.app.handleMenuAction('timeout', -1)">Remove Timeout</button>
+            </div>
+            <button class="cancel-btn" onclick="document.getElementById('timeout-modal').classList.add('hidden')">Cancel</button>
+        </div>
+    </div>
+
+    <script type="module" src="app.js"></script>
+</body>
+</html>
